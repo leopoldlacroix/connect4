@@ -1,7 +1,7 @@
 #morpion {
     background-color: whitesmoke;
-    height: 200px;
-    width: 200px;
+    height: 100%;
+    width: 100%;
 }
 
 
@@ -11,4 +11,14 @@
 
 .rond {
     background-color: blanchedalmond;
+}
+
+.line {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.column {
+    padding: 1px;
 }
