@@ -1,0 +1,14 @@
+#morpion {
+    background-color: whitesmoke;
+    height: 200px;
+    width: 200px;
+}
+
+
+.croix {
+    background-color: lightblue;
+}
+
+.rond {
+    background-color: blanchedalmond;
+}
