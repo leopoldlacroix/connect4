@@ -19,6 +19,12 @@
     justify-content: space-around;
 }
 
-.column {
-    padding: 1px;
+.field{
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+.field:hover {
+    background: lightcyan;
+    color: grey;
 }
