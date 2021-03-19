@@ -22,25 +22,26 @@ function addColumn() {
 }
 
 function restart() {
+    morpion = new Morpion();
     morpion.generateHtml();
     onclicks();
 }
 
 onclicks();
 function onclicks(){
-    let fields = document.getElementsByClassName("field") 
-    for (let field of fields) {
-        field.onclick = action;   
+    let columns = document.getElementsByClassName("column") 
+    for (let column of columns) {
+        column.onclick = action;   
     }
 }
 
-function action(){
-    if(Morpion.players.includes(this.innerHTML)){
-        return;
-    }
-    this.innerHTML = morpion.action()
+function action() {
+    morpion.action(this.id);
+    onclicks();
     let checkRes = morpion.check();
-    if(checkRes){
+    if (checkRes) {
+        console.log(checkRes);
+        morpion.generateHtml();
         document.querySelector("footer").innerHTML = `${checkRes} won!`;
     }
 }

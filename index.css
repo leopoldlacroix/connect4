@@ -1,7 +1,8 @@
 #morpion {
     background-color: whitesmoke;
-    height: 100%;
-    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 
@@ -13,18 +14,11 @@
     background-color: blanchedalmond;
 }
 
-.line {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+.column {
+    padding: 2px;
 }
 
-.field{
-    height: 100%;
-    width: 100%;
-    text-align: center;
-}
-.field:hover {
+.column:hover {
     background: lightcyan;
     color: grey;
 }

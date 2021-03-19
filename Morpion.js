@@ -2,38 +2,47 @@ class Morpion {
     static players = ['X','0'];
     constructor() {
         this.lines = 5;
-        this.columns = 5;
         this.turn = 0;
+        this.columns = [];
+        for (let i = 0; i < 7; i++) {
+            this.columns.push([]);
+            
+        }
     }
 
     generateHtml() {
-        content = '';
-        for (let line = 0; line < this.lines; line++) {
-            content += `<div class = line id = line${line}">`;
-
-            for (let column = 0; column < this.columns; column++) {
-                content +=
-                    `<div class=field id=${"field"+line+column}>_</div>`;
+        let content = '';
+        for (let i = 0; i < this.columns.length; i++) {
+            let column = this.columns[i];
+            content += `<div class = column id = ${i}>`;
+            let column_to_show = new Array(this.lines - column.length).fill('_').concat(column);
+            for (let field of column_to_show) {
+                content += `<div class=field>${field}</div>`;
             }
             content += "</div >";
         }
-        document.getElementById('morpion').innerHTML = content;
-        
+        let morpionDiv = document.getElementById('morpion');
+        morpionDiv.innerHTML = content
     }
 
-    action(){
-        this.turn = (this.turn+1) % Morpion.players.length;
-        return Morpion.players[this.turn];
+    action(column_number) {
+        let chosen_column = this.columns[column_number];
+        if (chosen_column.length < this.lines) {
+            chosen_column.splice(0, 0, Morpion.players[this.turn]); //at i = 0, delete 0 elts, insert val
+            this.turn = (this.turn + 1) % Morpion.players.length;
+            this.generateHtml();
+        }
     }
     
-    check(){
+    check() {
         let state = '';
-        for (let i = 0; i < this.lines; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                let fieldChangingColumn = document.getElementById("field"+i+j).innerHTML;
-                state += fieldChangingColumn;
+        for (let column of this.columns) {
+            let column_showed = new Array(this.lines - column.length).fill('_').concat(column);
+            for (let field of column_showed) {
+                state += field;
             }
         }
+        
         let checks = this.allchecks();
         for (let expression of checks) {
             let regex = new RegExp(expression);
@@ -47,10 +56,10 @@ class Morpion {
     allchecks(){
         let checks = [];
         for (let representation of Morpion.players) {
-            checks.push(representation.repeat(4)); //regex for line win
-            checks.push(`(${representation}).{${this.columns-2}}`.repeat(3)+representation); //for sw diags
-            checks.push(`(${representation}).{${this.columns-1}}`.repeat(3)+representation); //for columns
-            checks.push(`(${representation}).{${this.columns}}`.repeat(3)+representation); //for se diags
+            checks.push(`(${representation})` + representation.repeat(3)); //regex for line win
+            checks.push(`(${representation}).{${this.lines-1}}`.repeat(3)+representation); //for columns
+            // checks.push(`(${representation}).{${this.lines-2}}`.repeat(3)+representation); //for sw diags
+            // checks.push(`(${representation}).{${this.lines}}`.repeat(3)+representation); //for se diags
         }
         return checks;
     }
@@ -61,7 +70,7 @@ class Morpion {
     }
 
     addColumn() {
-        this.columns += 1;
+        this.columns.push([]);
         this.generateHtml();
     }
 
