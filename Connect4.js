@@ -1,5 +1,6 @@
 import { Player } from './Player.js';
 import { PRandom } from './PRandom.js';
+import { PSmart } from './PSmart.js';
 
 class Connect4 {
     static representations = ['X','0'];
@@ -109,6 +110,10 @@ class Connect4 {
 
             case 1:
                 this.players[player_turn] = new PRandom(this);
+                break;
+            
+            case 2:
+                this.players[player_turn] = new PSmart(this);
                 break;
         
             default:
