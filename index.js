@@ -18,7 +18,7 @@ function addColumn() {
 }
 
 function restart() {
-    connect4 = new connect4();
+    connect4 = new Connect4();
     
 }
 

@@ -1,4 +1,5 @@
 import { Player } from './Player.js';
+import { PRandom } from './PRandom.js';
 
 class Connect4 {
     static representations = ['X','0'];
@@ -11,12 +12,15 @@ class Connect4 {
             this.columns.push([]);
         }
 
+        this.setFooter("fight!");
+ 
         this.generateHtml();
-        let p1_selection = document.getElementById("p0").value;
         let p2_selection = document.getElementById("p1").value;
-
-        this.setPlayer(+p1_selection, 0);
         this.setPlayer(+p2_selection, 1);
+        
+        let p1_selection = document.getElementById("p0").value;
+        this.setPlayer(+p1_selection, 0);
+        
         
     }
 
@@ -36,6 +40,14 @@ class Connect4 {
         }
         let connect4Div = document.getElementById('connect4');
         connect4Div.innerHTML = content;
+    }
+
+    nextTurn(){
+        if(!this.check()){
+            this.turn = (this.turn + 1) % Connect4.representations.length;
+            let player = this.players[this.turn];
+            player.beginTurn();
+        }
     }
 
     /**
@@ -75,12 +87,39 @@ class Connect4 {
 
             //if win generate html to clear clicks
             if (match && match.length > 1) {
-                connect4.generateHtml();
+                this.generateHtml();
                 this.setFooter(`${match[1]} won!`);
+                console.log(match[1], 'won');
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * 
+     * @param player_type 0 = player, 1 = ...
+     * @param turn player 0 or 1
+     */
+    setPlayer(player_type,player_turn){
+        switch (player_type) {
+            case 0:
+                this.players[player_turn] = new Player(this);
+                break;
+
+            case 1:
+                this.players[player_turn] = new PRandom(this);
+                break;
+        
+            default:
+                this.players[player_turn] = new Player(this);
+                break;
+        }
+
+        if(this.turn == player_turn){
+            let player = this.players[player_turn];
+            player.beginTurn();
+        }
     }
 
     /**
@@ -107,45 +146,9 @@ class Connect4 {
         this.columns.push([]);
         this.generateHtml();
     }
-
     
     setFooter(text){
         document.querySelector("footer").innerHTML = text;
-    }
-
-    /**
-     * 
-     * @param player_type 0 = player, 1 = ...
-     * @param turn player 0 or 1
-     */
-    setPlayer(player_type,player_turn){
-        switch (player_type) {
-            case 0:
-                this.players[player_turn] = new Player(this);
-                break;
-
-            case 1:
-                this.players[player_turn] = new Player(this);
-                console.log('achanger');
-                break;
-        
-            default:
-                this.players[player_turn] = new Player(this);
-                break;
-        }
-
-        if(this.turn == player_turn){
-            let player = this.players[player_turn];
-            player.beginTurn();
-        }
-    }
-
-    nextTurn(){
-        if(!this.check()){
-            this.turn = (this.turn + 1) % Connect4.representations.length;
-            let player = this.players[this.turn];
-            player.beginTurn();
-        }
     }
     
 }

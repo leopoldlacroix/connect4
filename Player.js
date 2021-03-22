@@ -1,7 +1,6 @@
 class Player {
     constructor(connect4) {
         this._type = "imbecile";
-        this.turn = 0;
         this.connect4 = connect4;
     }
 
