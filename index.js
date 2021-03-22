@@ -1,47 +1,34 @@
-import { Morpion } from './Morpion.js';
+import { Connect4 } from './Connect4.js';
 
 
-var morpion = new Morpion();
-
-let morpionComponent = document.getElementById('morpion');
-morpionComponent = morpion.generateHtml();
+var connect4 = new Connect4();
 
 document.getElementById("addLine").onclick = addLine;
 document.getElementById("addColumn").onclick = addColumn;
 document.getElementById("restart").onclick = restart;
-
+document.getElementById("p0").onchange = setPlayer;
+document.getElementById("p1").onchange = setPlayer;
 
 function addLine() {
-    morpion.addLine();
-    onclicks();
+    connect4.addLine();
 }
 
 function addColumn() {
-    morpion.addColumn();
-    onclicks();
+    connect4.addColumn();
 }
 
 function restart() {
-    morpion = new Morpion();
-    morpion.generateHtml();
-    onclicks();
+    connect4 = new connect4();
+    
 }
 
-onclicks();
-function onclicks(){
-    let columns = document.getElementsByClassName("column") 
-    for (let column of columns) {
-        column.onclick = action;   
-    }
-}
+function setPlayer(event){
+    let selection_tag = event.originalTarget;
 
-function action() {
-    morpion.action(this.id);
-    onclicks();
-    let checkRes = morpion.check();
-    if (checkRes) {
-        console.log(checkRes);
-        morpion.generateHtml();
-        document.querySelector("footer").innerHTML = `${checkRes} won!`;
-    }
+    let value = +selection_tag.value;
+    let turn = +selection_tag.id.slice(1);
+    connect4.setPlayer(value,turn);
+    
+    console.log(`${Connect4.representations[0]}: ${connect4.players[0]._type} | ${Connect4.representations[1]}: ${connect4.players[1]._type}`);
+    console.log('-');
 }

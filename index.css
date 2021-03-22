@@ -1,4 +1,4 @@
-#morpion {
+#connect4 {
     background-color: whitesmoke;
     display: flex;
     flex-direction: row;
@@ -21,4 +21,8 @@
 .column:hover {
     background: lightcyan;
     color: grey;
+}
+
+.field{
+    text-align: center;
 }
