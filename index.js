@@ -1,7 +1,7 @@
 import { Connect4 } from './Connect4.js';
 
 
-var connect4 = new Connect4();
+var connect4 = new Connect4(true);
 
 document.getElementById("addLine").onclick = addLine;
 document.getElementById("addColumn").onclick = addColumn;
@@ -18,17 +18,17 @@ function addColumn() {
 }
 
 function restart() {
-    connect4 = new Connect4();
+    connect4 = new Connect4(true);
     
 }
 
 function setPlayer(event){
-    let selection_tag = event.originalTarget;
+    let selection_tag = event.srcElement;
 
     let value = +selection_tag.value;
     let turn = +selection_tag.id.slice(1);
     connect4.setPlayer(value,turn);
     
-    console.log(`${Connect4.representations[0]}: ${connect4.players[0]._type} | ${Connect4.representations[1]}: ${connect4.players[1]._type}`);
+    console.log(`${Connect4.player_representations[0]}: ${connect4.players[0]._type} | ${Connect4.player_representations[1]}: ${connect4.players[1]._type}`);
     console.log('-');
 }

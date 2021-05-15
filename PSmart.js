@@ -1,5 +1,3 @@
-import * as tf from '@tensorflow/tfjs'
-
 class PSmart {
     constructor(connect4) {
         this._type = "smart";
@@ -26,7 +24,7 @@ class PSmart {
             
         }
         let max_index = possible_column_indexes.length;
-        let chosen_index = Math.floor(Math.random() * Math.floor(max_index)); // random betwin 0 and max excluded
+        let chosen_index = Math.floor(Math.random() * Math.floor(max_index)); // random between 0 and max excluded
         let chosen_column_number = possible_column_indexes[chosen_index];
         console.log("chosen_column_number: " + chosen_column_number)
         return chosen_column_number;
