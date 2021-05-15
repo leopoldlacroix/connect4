@@ -1,23 +1,18 @@
 class PRandom {
-    constructor(connect4) {
+    constructor() {
         this._type = "random";
-        this.connect4 = connect4;
     }
 
-    action(column_number) {
-        this.connect4.action(column_number);
-    }
-
-    beginTurn(){
+    chooseColumn(connect4){
         console.log("begin random turn")
-        let chosen_column = this.randomColumn();
-        this.action(chosen_column);
+        let chosen_column = this.randomColumn(connect4);
+        return chosen_column;
     }
 
-    randomColumn() {
+    randomColumn(connect4) {
         let possible_column_indexes = [];
-        for (let index = 0; index < this.connect4.columns.length; index++) {
-            if (this.connect4.columns[index].length < this.connect4.lines) {
+        for (let index = 0; index < connect4.columns.length; index++) {
+            if (connect4.columns[index].length < connect4.lines) {
                 possible_column_indexes.push(index);
             }
             

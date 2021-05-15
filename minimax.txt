@@ -1,0 +1,26 @@
+posible moves
+
+best_score = -infinity
+best_index = 0
+for index,possible_move of possible_moves:
+	score = score(state, possible_move, depth)
+	if (score better than best_score):
+			best_score = score
+			best_index = index
+	
+	
+scrore(state, move, depth):
+	next_state = makeMove(state,move)
+	
+	if depth ==0:
+		return score0(next_state)
+
+	poss_ms = poss_ms(next_state)
+
+	best_score = -infinity
+	for poss_m of poss_ms:
+		let score = score(state, poss_m, depth -1)
+		if (score better than best_score):
+			best_score = score 
+	return best_score
+		
