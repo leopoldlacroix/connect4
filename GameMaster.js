@@ -1,6 +1,7 @@
 import { Player } from './Player.js';
 import { PRandom } from './PRandom.js';
 import { Minimax } from './Minimax.js';
+import { MinimaxPerf } from './MinimaxPerf.js';
 import { Connect4 } from './Connect4.js';
 
 class GameMaster {
@@ -151,11 +152,15 @@ class GameMaster {
                 break;
             
             case 2:
-                this.players[player_turn] = new Minimax(Connect4.player_representations[player_turn]);
+                this.players[player_turn] = new MinimaxPerf(Connect4.player_representations[player_turn], 1);
+                break;
+
+            case 3:
+                this.players[player_turn] = new Minimax(Connect4.player_representations[player_turn], 1);
                 break;
         
             default:
-                this.players[player_turn] = new Minimax(Connect4.player_representations[player_turn]);
+                this.players[player_turn] = new Minimax(Connect4.player_representations[player_turn], 0);
                 break;
         }
 

@@ -1,6 +1,6 @@
 import { Connect4 } from './Connect4.js';
 
-class Minimax {
+class MinimaxPerf {
     /**
      * 
      * @param {String} player_representation 
@@ -25,13 +25,12 @@ class Minimax {
 
         //player tries all moves selects best score
         let best_score = -Infinity;
-        let opponent_best_score = Infinity;
         for (let column_index = 0; column_index < connect4.columns.length; column_index++) {
 
             if (!connect4.isColumnIndexFilled(column_index)) {
                 
                 let cloned_connect4 = connect4.clone().action(column_index);
-                let action_score = this.minimaxScore(cloned_connect4, this.depth, best_score, opponent_best_score);
+                let action_score = this.minimaxScore(cloned_connect4, this.depth, [best_score, Infinity]);
 
                 score_by_possible_move[column_index] = action_score;
                 best_score = Math.max(best_score, action_score);
@@ -53,70 +52,52 @@ class Minimax {
      * clone connect4 each time the child score is calculated so it doesn't modify it
      * @param {Connect4} connect4 
      * @param {number} depth 0 == score(connect4)
-     * @param {number} player_best_score best score of previous calculated moves for player
-     * @param {number} opponent_best_score best score of previous calculated moves for opponent
+     * @param {number[]} best_scores best scores previous moves [pov_player, pov_opponent]
      *  so if the score here is worst (for previous player) skip
      * @returns best score amongs all possible childs (minimax look it up bro)
      */
-    minimaxScore(connect4, depth, player_best_score, opponent_best_score) {
+    minimaxScore(connect4, depth, best_scores) {
         if(depth < 1){
-            return this.score(connect4);
+            return this.scorePOV(connect4);
         }
 
         /**
          * an even depth represents the opponent who will minimize the players score
          * an odd deph will be the actual player who will maximize his score
-         * -1 = opponent, 1 = player
          */
-        if(depth % 2) {
 
-            let score_by_possible_move = {};
-            for (let column_index = 0; column_index < connect4.columns.length; column_index++) {
+        let pov_best_score = -1 * best_scores[1];
+        let pov_opponent_best_score = -1 * best_scores[0];
 
-                if (!connect4.isColumnIndexFilled(column_index)) {
-                    
-                    let cloned_connect4 = connect4.clone().action(column_index);
-                    let action_score = this.minimaxScore(cloned_connect4, this.depth - 1, player_best_score, opponent_best_score);
+        let score_by_possible_move = {};
+        for (let column_index = 0; column_index < connect4.columns.length; column_index++) {
 
-                    score_by_possible_move[column_index] = action_score;
-                    opponent_best_score = Math.min(opponent_best_score, action_score);
+            if (!connect4.isColumnIndexFilled(column_index)) {
+                
+                let cloned_connect4 = connect4.clone().action(column_index);
+                let action_score = this.minimaxScore(cloned_connect4, this.depth - 1, [pov_best_score, pov_opponent_best_score]);
 
-                    if(opponent_best_score <= player_best_score){
-                        break;
-                    }
-                }
-            }
+                score_by_possible_move[column_index] = action_score;
+                pov_best_score = Math.max(pov_best_score, action_score);
 
-            return opponent_best_score;
-        } else {
-
-            let score_by_possible_move = {};
-            for (let column_index = 0; column_index < connect4.columns.length; column_index++) {
-
-                if (!connect4.isColumnIndexFilled(column_index)) {
-                    
-                    let cloned_connect4 = connect4.clone().action(column_index);
-                    let action_score = this.minimaxScore(cloned_connect4, this.depth - 1, player_best_score, opponent_best_score);
-
-                    score_by_possible_move[column_index] = action_score;
-                    player_best_score = Math.max(player_best_score, action_score);
-
-                    if(player_best_score <= opponent_best_score){
-                        break;
-                    }
+                // if one can obtain a better score than the opponent when he choses other course of action
+                if(pov_best_score > pov_opponent_best_score){
+                    break;
                 }
             }
         }
+
+        return -1 * best_score;
     }
 
     /**
-     * doesn't modify connect4
+     * score dependent of player playing
      * @param {Connect} connect4 
      * @returns calculated score for this.player on connect4
      */
-    score(connect4){
+    scorePOV(connect4){
         let string_state = connect4.getStringState();
-        let player_rep = this.player_representation;
+        let player_rep = connect4.getPlayerRepresentation();
         let opponent_rep = Connect4.player_representations.filter((e) => e != player_rep);
 
         let player_4s = 0;
@@ -178,4 +159,4 @@ class Minimax {
     }
 }
 
-export { Minimax };
+export { MinimaxPerf };
