@@ -5,6 +5,7 @@ class Connect4 {
         this.lines = 5;
         this.columns = [];
         this.turn = 0;
+        this.winner = null;
         for (let i = 0; i < 7; i++) {
             this.columns.push([]);
         }     
@@ -25,6 +26,8 @@ class Connect4 {
         if(chosen_column.length > this.lines) {
             throw 'chosen column is already filled!'
         }
+
+        this.game_over_message = this.GameOver();
         return this;
     }
 
@@ -53,6 +56,56 @@ class Connect4 {
     isColumnIndexFilled(column_index){
         return this.iscollumnFilled(this.columns[column_index]);
     }
+
+
+    /**
+     * 
+     * @returns message if game over or win else null
+     */
+    GameOver(){
+        let column_lengths = this.columns.map((col) => col.length);
+        if(Math.min(...column_lengths) == this.lines){
+            return "Game Over";
+        }
+
+        return this.winCheck();
+    }
+
+    /**
+     * directly get attribute game_over_message
+     * if win returns message else returns null
+     */
+    winCheck() {
+        let string_state = this.getStringState();
+        let checks = this.allchecks();
+        for (let expression of checks) {
+            let regex = new RegExp(expression);
+            let match = string_state.match(regex);
+
+            //if win generate html to clear clicks
+            if (match && match.length > 1) {
+                return match[1] + " won";
+            }
+        }
+        return null;
+    }
+
+    /**
+     * all regexes to test
+     * @returns regex list
+     */
+     allchecks(){
+        let n_lines = this.lines;
+        let checks = [];
+        for (let representation of Connect4.player_representations) {
+            checks.push(`(${representation})` + representation.repeat(3)); //regex for column win
+            checks.push(`(${representation})` + `.{${n_lines}}${representation}`.repeat(3)); //for line
+            checks.push(`(${representation})` + `.{${n_lines - 1}}${representation}`.repeat(3)); //for sw diags
+            checks.push(`(${representation})` + `.{${n_lines + 1}}${representation}`.repeat(3)); //for se diags
+        }
+        return checks;
+    }
+    
 
     getPlayerRepresentation(){
         return Connect4.player_representations[this.turn % Connect4.player_representations.length];

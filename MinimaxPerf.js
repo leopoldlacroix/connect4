@@ -45,7 +45,7 @@ class MinimaxPerf {
         console.log("before:", connect4.getReadableState());
         console.log("after:", connect4.clone().action(best_index).getReadableState());
         console.log("_")
-        return best_index
+        return best_index;
     }
 
     /**

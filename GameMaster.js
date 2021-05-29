@@ -2,6 +2,7 @@ import { Player } from './Player.js';
 import { PRandom } from './PRandom.js';
 import { Minimax } from './Minimax.js';
 import { MinimaxPerf } from './MinimaxPerf.js';
+import { MinimaxLs } from './MinimaxLs.js';
 import { Connect4 } from './Connect4.js';
 
 class GameMaster {
@@ -34,7 +35,7 @@ class GameMaster {
         }
 
         if([null, undefined].includes(chosen_column)){
-            throw "GameMaseter: pas de colomne choisie"
+            throw "GameMaster: pas de colomne choisie"
         }
         this.endTurn(chosen_column);
     }
@@ -43,7 +44,8 @@ class GameMaster {
         this.connect4.action(chosen_column);
         this.generateHtml();
 
-        if(this.winCheck() || this.GameOver()){
+        if(this.connect4.game_over_message){
+            this.setFooter(this.connect4.game_over_message);
             return;
         }
 
@@ -87,54 +89,6 @@ class GameMaster {
         let representation = Connect4.player_representations[this.turn];
         this.connect4.action(column_number, representation);
     }
-    
-    
-    /**
-     * is win and who wins
-     */
-    winCheck() {
-        let string_state = this.connect4.getStringState();
-        let checks = this.allchecks();
-        for (let expression of checks) {
-            let regex = new RegExp(expression);
-            let match = string_state.match(regex);
-
-            //if win generate html to clear clicks
-            if (match && match.length > 1) {
-                this.setFooter(`${match[1]} won!`);
-                console.log(match[1], 'won'); 
-
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    GameOver(){
-        let column_lengths = this.connect4.columns.map((col) => col.length);
-        if(Math.min(...column_lengths) == this.connect4.lines){
-            return true;
-        }
-
-    }
-    
-    
-    /**
-     * all regexes to test
-     * @returns regex list
-     */
-    allchecks(){
-        let n_lines = this.connect4.lines;
-        let checks = [];
-        for (let representation of Connect4.player_representations) {
-            checks.push(`(${representation})` + representation.repeat(3)); //regex for column win
-            checks.push(`(${representation})` + `.{${n_lines}}${representation}`.repeat(3)); //for line
-            checks.push(`(${representation})` + `.{${n_lines - 1}}${representation}`.repeat(3)); //for sw diags
-            checks.push(`(${representation})` + `.{${n_lines + 1}}${representation}`.repeat(3)); //for se diags
-        }
-        return checks;
-    }
 
     /**
      * 
@@ -152,10 +106,14 @@ class GameMaster {
                 break;
             
             case 2:
-                this.players[player_turn] = new MinimaxPerf(Connect4.player_representations[player_turn], 1);
+                this.players[player_turn] = new MinimaxLs(2);
                 break;
 
             case 3:
+                this.players[player_turn] = new MinimaxPerf(Connect4.player_representations[player_turn], 1);
+                break;
+
+            case 4:
                 this.players[player_turn] = new Minimax(Connect4.player_representations[player_turn], 1);
                 break;
         

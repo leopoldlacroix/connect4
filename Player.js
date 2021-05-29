@@ -16,6 +16,8 @@ class Player {
         for (let column of columns) {
             column.onclick = this.clicked.bind(this);   
         }
+
+        return null;
     }
 
 }
